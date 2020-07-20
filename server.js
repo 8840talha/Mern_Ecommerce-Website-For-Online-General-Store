@@ -11,6 +11,8 @@ const morgan = require("morgan");
 // const courses = require('./routes/Courses')
 const auth = require("./routes/auth");
 const categories = require("./routes/category");
+const products = require("./routes/products");
+
 // const reviews = require('./routes/Reviews')
 const cors = require("cors");
 // const mongoSanitize = require('express-mongo-sanitize');
@@ -70,6 +72,7 @@ app.use(morgan("dev"));
 // app.use(fileupload())
 app.use("/api/users", auth);
 app.use("/api/categories", categories);
+app.use("/api/products", products);
 
 const PORT = process.env.PORT || 8080;
 

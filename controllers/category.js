@@ -22,6 +22,7 @@ exports.create_New = (req, res) => {
 
 exports.get_All_categories = (req, res) => {
   Category.find()
+    .populate("ProductLists")
     .then((foundCategories) => {
       if (foundCategories.length == 0) {
         return res.status(404).json({
@@ -48,6 +49,7 @@ exports.get_All_categories = (req, res) => {
 };
 exports.get_Single_Category = (req, res, next) => {
   Category.findById(req.params.id)
+    .populate("ProductLists")
     .exec()
     .then((SingleCategory) => {
       if (!SingleCategory) {
