@@ -5,8 +5,8 @@ const Category = require("../models/category");
 exports.Get_All_Products = (req, res) => {
   if (req.params.categoryId) {
     Product.find({ category: req.params.categoryId })
-    .populate("category")  
-    .exec()
+      .populate("category")
+      .exec()
       .then((foundProducts) => {
         if (foundProducts.length == 0) {
           return res.status(404).json({
@@ -25,7 +25,8 @@ exports.Get_All_Products = (req, res) => {
       })
       .catch((err) => err.status(500).json({ error: err }));
   } else {
-    Product.find().populate("category")
+    Product.find()
+      .populate("category")
       .exec()
       .then((allProducts) => {
         if (allProducts.length == 0) {
@@ -77,8 +78,8 @@ exports.Add_New_Product = (req, res) => {
   console.log(req.body);
   req.body.category = req.params.categoryId;
   // req.body.user = req.user.id;
-  
-    Category.findById(req.params.categoryId)
+
+  Category.findById(req.params.categoryId)
     .exec()
     .then((category) => {
       if (!category)
@@ -86,17 +87,6 @@ exports.Add_New_Product = (req, res) => {
           success: false,
           message: "No category found to add Products",
         });
-
-      // if (
-      //   category.user.toString() !== req.user.id &&
-      //   req.user.role !== "admin"
-      // ) {
-      //   return res.status(401).json({
-      //     success: false,
-      //     message: `You dont have access to add a Product to ${category.name}`,
-      //   });
-      //   next();
-      // }
       const newProduct = new Product(req.body);
       newProduct
         .save()
@@ -106,5 +96,34 @@ exports.Add_New_Product = (req, res) => {
         .catch((err) => {
           res.status(500).json({ success: false, error: err.message });
         });
+    });
+};
+
+exports.get_Related_Products = (req, res) => {
+  let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+  console.log(req.body);
+  Product.find({
+    _id: { $ne: req.params.id },
+    category: req.body.category,
+  })
+    .limit(limit)
+    .populate("category", "_id name")
+    .then((foundProducts) => {
+      if (foundProducts.length == 0) {
+        return res.status(404).json({
+          count: foundProducts.length,
+          success: true,
+          message: "Not Found Products",
+          Products: foundProducts,
+        });
+      }
+      res.status(200).json({
+        count: foundProducts.length,
+        success: true,
+        data: foundProducts,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({ success: false, error: err.message });
     });
 };

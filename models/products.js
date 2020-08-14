@@ -11,7 +11,6 @@ const productSchema = new mongoose.Schema(
       required: [true, "Please add a name"],
       maxlength: 32,
     },
-
     description: {
       type: String,
       required: [true, "Please Add a Description"],
