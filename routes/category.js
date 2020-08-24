@@ -15,7 +15,7 @@ const productRouter = require("./products");
 
 router.use("/:categoryId/products", productRouter);
 
-router.post("/create",create_New);
+router.post("/create",screate_New);
 router.get("/getAll", get_All_categories);
 router.get("/getSingle/:id", get_Single_Category);
 router.delete(
